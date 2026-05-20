@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimesheetApp.DBAccess;
 using TimesheetApp.Interfaces;
-using TimesheetApp.Util;
 
 namespace TimesheetApp
 {
@@ -30,22 +24,23 @@ namespace TimesheetApp
         {
             try
             {
-                //dobaviti podatke o trenutno logovanom korisniku (username, email)
+                // Retrieve logged user information
                 string userName = userLogger.GetLoggedUserName();
                 string userEmail = userLogger.GetLoggedUserEmail(userName);
 
-                //dobaviti podatke o projektu i aktivnosti (task) na projektu za koju se loguje vreme
+                // Retrieve task information
                 int taskId = taskManager.GetTaskId(userName, userEmail);
 
-                //logovati vreme - sacuvati podatke u bazi
+                // Log time and save to database
                 task.TaskId = taskId;
                 task.Hours = hours;
                 task.Minutes = minutes;
                 task.Description = description;
                 bool saved = task.SaveToDB();
+
                 if (saved)
                 {
-                    //poslati mejl obavestenja o logovanom vremenu
+                    // Send notification email
                     emailSender.SendEmail(userEmail, 
                                          "Time logged successfully",
                                          hours + " hours and " + minutes + " minutes successfully logged to task with ID=" + taskId);
@@ -53,12 +48,13 @@ namespace TimesheetApp
                 else
                 {
                     throw new Exception("Failed to save data to database");
-                }                                               
+                }                                                
             }
-            catch (Exception ex) //obrada gresaka
+            catch (Exception ex)
             {
+                // Handle errors
                 errorLogger.LogError(ex);
-                throw ex;
+                throw;
             }
         }
     }

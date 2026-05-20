@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\StubTask.cs" />
+    <Compile Include="Fakes\StubTaskManager.cs" />
     <Compile Include="Interfaces\IEmailSender.cs" />
     <Compile Include="Interfaces\IErrorLogger.cs" />
     <Compile Include="Interfaces\ITaskManager.cs" />
